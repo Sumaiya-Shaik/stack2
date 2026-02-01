@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Food Store</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+    }
+
+    .controls {
+      margin-bottom: 15px;
+    }
+
+    .product {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Food Store</h2>
+
+<div class="controls">
+  Category:
+  <select id="categoryBox">
+    <option value="all">All</option>
+    <option value="fastfood">Fast Food</option>
+    <option value="beverages">Beverages</option>
+    <option value="desserts">Desserts</option>
+    <option value="healthy">Healthy</option>
+  </select>
+
+  Sort By:
+  <select id="sortBox">
+    <option value="none">None</option>
+    <option value="priceLow">Price Low → High</option>
+    <option value="priceHigh">Price High → Low</option>
+    <option value="nameAZ">Name A → Z</option>
+    <option value="nameZA">Name Z → A</option>
+    <option value="ratingHigh">Rating High → Low</option>
+    <option value="ratingLow">Rating Low → High</option>
+  </select>
+</div>
+
+<div id="productList"></div>
+
+<script>
+  const products = [
+    { name: "Burger", price: 120, rating: 4.2, category: "fastfood" },
+    { name: "Pizza", price: 250, rating: 4.5, category: "fastfood" },
+    { name: "French Fries", price: 100, rating: 4.0, category: "fastfood" },
+    { name: "Sandwich", price: 90, rating: 3.9, category: "fastfood" },
+    { name: "Hot Dog", price: 140, rating: 4.1, category: "fastfood" },
+
+    { name: "Cold Coffee", price: 150, rating: 4.4, category: "beverages" },
+    { name: "Green Tea", price: 80, rating: 4.3, category: "beverages" },
+    { name: "Lemon Juice", price: 70, rating: 4.0, category: "beverages" },
+    { name: "Milk Shake", price: 180, rating: 4.6, category: "beverages" },
+    { name: "Soft Drink", price: 60, rating: 3.8, category: "beverages" },
+
+    { name: "Chocolate Cake", price: 220, rating: 4.7, category: "desserts" },
+    { name: "Ice Cream", price: 160, rating: 4.5, category: "desserts" },
+    { name: "Brownie", price: 190, rating: 4.4, category: "desserts" },
+    { name: "Cup Cake", price: 110, rating: 4.1, category: "desserts" },
+    { name: "Donut", price: 90, rating: 4.0, category: "desserts" },
+
+    { name: "Fruit Salad", price: 130, rating: 4.6, category: "healthy" },
+    { name: "Oats Bowl", price: 120, rating: 4.5, category: "healthy" },
+    { name: "Grilled Veggies", price: 200, rating: 4.4, category: "healthy" },
+    { name: "Sprout Salad", price: 110, rating: 4.3, category: "healthy" },
+    { name: "Boiled Eggs", price: 90, rating: 4.2, category: "healthy" }
+  ];
+
+  const productList = document.getElementById("productList");
+  const categoryBox = document.getElementById("categoryBox");
+  const sortBox = document.getElementById("sortBox");
+
+  categoryBox.onchange = updateView;
+  sortBox.onchange = updateView;
+
+  function updateView() {
+    let data = [...products];
+
+    if (categoryBox.value !== "all") {
+      data = data.filter(item => item.category === categoryBox.value);
+    }
+
+    if (sortBox.value === "priceLow") data.sort((a,b)=>a.price-b.price);
+    if (sortBox.value === "priceHigh") data.sort((a,b)=>b.price-a.price);
+    if (sortBox.value === "nameAZ") data.sort((a,b)=>a.name.localeCompare(b.name));
+    if (sortBox.value === "nameZA") data.sort((a,b)=>b.name.localeCompare(a.name));
+    if (sortBox.value === "ratingHigh") data.sort((a,b)=>b.rating-a.rating);
+    if (sortBox.value === "ratingLow") data.sort((a,b)=>a.rating-b.rating);
+
+    render(data);
+  }
+
+  function render(items) {
+    productList.innerHTML = "";
+    items.forEach(p => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <strong>${p.name}</strong><br>
+        Price: ₹${p.price}<br>
+        Rating: ${p.rating}<br>
+        Category: ${p.category}
+      `;
+      productList.appendChild(div);
+    });
+  }
+
+  updateView();
+</script>
+
+</body>
+</html>
